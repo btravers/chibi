@@ -1,163 +1,163 @@
 # CHIBI — Bill of Materials (BOM)
 
-Liste complète du matériel nécessaire, organisée par catégorie. Les prix sont indicatifs (mars 2025) et peuvent varier selon les fournisseurs et la disponibilité.
+Complete list of required hardware, organized by category. Prices are estimates (March 2025) and may vary depending on suppliers and availability.
 
 ---
 
-## Cerveaux CHIBI (mobile)
+## CHIBI Brains (mobile)
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| MCU + écran | LilyGo T4-S3 (ESP32-S3R8 + RM690B0 AMOLED 2.41") | Cerveau temps réel, affichage, capteurs, servos | AliExpress / LilyGo | 1 | ~35 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| MCU + display | LilyGo T4-S3 (ESP32-S3R8 + RM690B0 AMOLED 2.41") | Real-time brain, display, sensors, servos | AliExpress / LilyGo | 1 | ~35 € |
 | SBC | Raspberry Pi Zero 2 W | Orchestration, vision, bridge | RPi Foundation | 4 | ~22 € |
-| Caméra | Pi Camera Module 3 NoIR | Vision, détection visages/gestes | RPi Foundation | 4 | ~30 € |
-| Câble caméra | Câble FPC Pi Zero → Camera | Connexion caméra | RPi Foundation | 4 | ~4 € |
+| Camera | Pi Camera Module 3 NoIR | Vision, face/gesture detection | RPi Foundation | 4 | ~30 € |
+| Camera cable | FPC cable Pi Zero → Camera | Camera connection | RPi Foundation | 4 | ~4 € |
 
-## Cerveaux Dock
+## Dock Brains
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
 | SBC | Raspberry Pi 5 8GB | Plugin manager, MQTT, Ollama, OTA | RPi Foundation | 5 | ~95 € |
-| Stockage | SSD NVMe 256GB (M.2 2230) | Stockage dock (plugins, modèles IA) | Amazon | 5 | ~35 € |
-| HAT NVMe | Pi 5 NVMe HAT | Adaptateur M.2 pour Pi 5 | Pimoroni / Geekworm | 5 | ~15 € |
-| Refroidissement | Active Cooler Pi 5 | Refroidissement actif | RPi Foundation | 5 | ~8 € |
-| Alimentation dock | USB-C 5V 5A (27W) | Alimentation Pi 5 + émetteur Qi | RPi Foundation | 5 | ~15 € |
+| Storage | NVMe SSD 256GB (M.2 2230) | Dock storage (plugins, AI models) | Amazon | 5 | ~35 € |
+| NVMe HAT | Pi 5 NVMe HAT | M.2 adapter for Pi 5 | Pimoroni / Geekworm | 5 | ~15 € |
+| Cooling | Active Cooler Pi 5 | Active cooling | RPi Foundation | 5 | ~8 € |
+| Dock power supply | USB-C 5V 5A (27W) | Pi 5 + Qi transmitter power | RPi Foundation | 5 | ~15 € |
 
-## Capteurs
+## Sensors
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| Tactile capacitif | MPR121 breakout (12 canaux) | Détection toucher tête | Adafruit | 1 | ~8 € |
-| IMU | QMI8658 (intégré T4-S3) | Orientation, chute, secousses | — (intégré) | 1 | — |
-| ToF laser | VL53L1X | Détection obstacles (portée 4m) | Pololu / AliExpress | 2 | ~12 € |
-| ToF anti-chute | VL6180X ×4 | Anti-chute, 4 coins sous les pieds | Adafruit / AliExpress | 2 | ~28 € (4×7) |
-| Lumière ambiante | VEML7700 | Adaptation luminosité | Adafruit / AliExpress | 2 | ~5 € |
-| Micro MEMS | ICS-43434 (I2S) | Réaction aux sons | Adafruit / AliExpress | 2 | ~7 € |
-| Temp/humidité | SHT40 Sensirion | Environnement ambiant | Adafruit / Mouser | 2 | ~6 € |
-| Capteur Hall | DRV5055 | Détection alignement dock | Mouser / DigiKey | 4 | ~3 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| Capacitive touch | MPR121 breakout (12 channels) | Head touch detection | Adafruit | 1 | ~8 € |
+| IMU | QMI8658 (integrated on T4-S3) | Orientation, fall, shake | — (integrated) | 1 | — |
+| ToF laser | VL53L1X | Obstacle detection (4m range) | Pololu / AliExpress | 2 | ~12 € |
+| ToF edge detection | VL6180X x4 | Edge detection, 4 corners under feet | Adafruit / AliExpress | 2 | ~28 € (4x7) |
+| Ambient light | VEML7700 | Brightness adaptation | Adafruit / AliExpress | 2 | ~5 € |
+| MEMS microphone | ICS-43434 (I2S) | Sound reaction | Adafruit / AliExpress | 2 | ~7 € |
+| Temp/humidity | SHT40 Sensirion | Ambient environment | Adafruit / Mouser | 2 | ~6 € |
+| Hall sensor | DRV5055 | Dock alignment detection | Mouser / DigiKey | 4 | ~3 € |
 
 ## Locomotion
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| Servos validation | SG90 ×4 | Validation cinématique (jetables) | AliExpress | 3a | ~8 € (4×2) |
-| Servos hanches+chevilles | Dynamixel XL330-M077-T ×4 | Locomotion bipède définitive | Robotis | 3b | ~100 € (4×25) |
-| Servo tête | Dynamixel XL330-M288-T ×1 | Mouvement de tête | Robotis | 3b | ~25 € |
-| Câble Dynamixel | Câble JST 3 broches ×5 | Bus daisychain UART | Robotis | 3b | ~10 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| Validation servos | SG90 x4 | Kinematics validation (disposable) | AliExpress | 3a | ~8 € (4x2) |
+| Hip + ankle servos | Dynamixel XL330-M077-T x4 | Final bipedal locomotion | Robotis | 3b | ~100 € (4x25) |
+| Head servo | Dynamixel XL330-M288-T x1 | Head movement | Robotis | 3b | ~25 € |
+| Dynamixel cable | JST 3-pin cable x5 | UART daisychain bus | Robotis | 3b | ~10 € |
 
-## Actionneurs corps
+## Body Actuators
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| LEDs | SK6812 RGBW (strip ou ring) | Rétroéclairage expressif | AliExpress | 2 | ~5 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| LEDs | SK6812 RGBW (strip or ring) | Expressive backlighting | AliExpress | 2 | ~5 € |
 
 ## Audio
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| Haut-parleur | Mini speaker 8Ω 1W (20mm) | Sortie audio (bips, sons) | AliExpress | 2 | ~3 € |
-| Ampli | MAX98357A (I2S) | Amplificateur audio | Adafruit / AliExpress | 2 | ~5 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| Speaker | Mini speaker 8Ohm 1W (20mm) | Audio output (beeps, sounds) | AliExpress | 2 | ~3 € |
+| Amplifier | MAX98357A (I2S) | Audio amplifier | Adafruit / AliExpress | 2 | ~5 € |
 
-## Alimentation
+## Power
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| Batterie | LiPo 1800mAh 3.7V JST-PH ×2 | Alimentation mobile (3600mAh total) | AliExpress / Amazon | 4 | ~16 € (2×8) |
-| Gestion charge | BQ25895 breakout | Charge LiPo, monitoring I2C | Adafruit / AliExpress | 4 | ~8 € |
-| Régulateur | LDO 3.3V (AMS1117 ou equiv.) | Alimentation capteurs | AliExpress | 1 | ~2 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| Battery | LiPo 1800mAh 3.7V JST-PH x2 | Mobile power (3600mAh total) | AliExpress / Amazon | 4 | ~16 € (2x8) |
+| Charge management | BQ25895 breakout | LiPo charging, I2C monitoring | Adafruit / AliExpress | 4 | ~8 € |
+| Regulator | LDO 3.3V (AMS1117 or equiv.) | Sensor power supply | AliExpress | 1 | ~2 € |
 
-> **Note** : Les batteries LiPo sont au format standard JST-PH 2mm pour permettre un upgrade futur vers des cellules Si-C (silicium-carbone) sans modification mécanique des logements.
+> **Note**: The LiPo batteries use the standard JST-PH 2mm format to allow a future upgrade to Si-C (silicon-carbon) cells without any mechanical modification to the compartments.
 
-## Charge Qi
+## Qi Charging
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| Récepteur Qi | Module Qi 10W + BQ51051B (avec ferrite) | Réception charge sans fil | AliExpress | 4 | ~8 € |
-| Émetteur Qi | Module émetteur Qi 10W | Émission charge (dock) | AliExpress | 4 | ~10 € |
-| Aimants | N35 néodyme 6×2mm ×8 | Alignement MagSafe | AliExpress | 4 | ~4 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| Qi receiver | Qi 10W module + BQ51051B (with ferrite) | Wireless charge reception | AliExpress | 4 | ~8 € |
+| Qi transmitter | Qi 10W transmitter module | Charge transmission (dock) | AliExpress | 4 | ~10 € |
+| Magnets | N35 neodymium 6x2mm x8 | MagSafe-style alignment | AliExpress | 4 | ~4 € |
 
-## Connectique
+## Connectors
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| Connecteurs I2C | JST-SH 4 broches (Qwiic/Stemma QT) | Bus I2C capteurs | Adafruit / AliExpress | 1 | ~5 € |
-| PCB prototype | Perfboard / PCB custom | Interconnexion composants | AliExpress | 1 | ~5 € |
-| Fils | Fils silicone AWG 26-30 (assortiment) | Câblage interne | AliExpress | 1 | ~5 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| I2C connectors | JST-SH 4-pin (Qwiic/Stemma QT) | I2C sensor bus | Adafruit / AliExpress | 1 | ~5 € |
+| Prototype PCB | Perfboard / custom PCB | Component interconnection | AliExpress | 1 | ~5 € |
+| Wires | Silicone wires AWG 26-30 (assorted) | Internal wiring | AliExpress | 1 | ~5 € |
 
-## Électronique / Outillage
+## Electronics / Tooling
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| Level shifter | TXB0104 (bidirectionnel) | Conversion niveaux logiques 3.3V ↔ 5V | Adafruit / AliExpress | 2 | ~3 € |
-| Multimètre | (tout modèle basique) | Debug électronique | Amazon | 1 | ~15 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| Level shifter | TXB0104 (bidirectional) | 3.3V ↔ 5V logic level conversion | Adafruit / AliExpress | 2 | ~3 € |
+| Multimeter | (any basic model) | Electronics debugging | Amazon | 1 | ~15 € |
 
-## Mécanique / Impression 3D
+## Mechanical / 3D Printing
 
-| Composant | Modèle | Rôle | Fournisseur | Phase | Prix |
-|-----------|--------|------|-------------|-------|------|
-| Filament PLA | PLA 1.75mm (1kg, couleur au choix) | Impression du boîtier | Amazon / AliExpress | 3 | ~20 € |
-| Vis / inserts | Kit vis M2/M3 + inserts filetés thermiques | Assemblage boîtier | AliExpress | 3 | ~8 € |
-| Pieds caoutchouc | Patins silicone adhésifs | Adhérence au sol | AliExpress | 3 | ~3 € |
+| Component | Model | Role | Supplier | Phase | Price |
+|-----------|-------|------|----------|-------|-------|
+| PLA filament | PLA 1.75mm (1kg, color of choice) | Enclosure printing | Amazon / AliExpress | 3 | ~20 € |
+| Screws / inserts | M2/M3 screw kit + heat-set threaded inserts | Enclosure assembly | AliExpress | 3 | ~8 € |
+| Rubber feet | Adhesive silicone pads | Floor grip | AliExpress | 3 | ~3 € |
 
 ---
 
-## Niveaux de budget
+## Budget Tiers
 
-### Phase 1 seule — ~192 €
+### Phase 1 Only — ~192 €
 
-Premier signe de vie : écran avec yeux animés et réaction au toucher.
+First sign of life: screen with animated eyes and touch reaction.
 
-| Poste | Détail | Coût |
-|-------|--------|------|
-| LilyGo T4-S3 | MCU + écran AMOLED | 35 € |
-| MPR121 | Capteur tactile | 8 € |
-| Régulateur 3.3V | Alimentation capteurs | 2 € |
-| Connectique | JST, PCB, fils | 15 € |
-| Servos SG90 ×4 | Validation locomotion (Phase 3a) | 8 € |
-| Filament PLA | Impression châssis Otto | 20 € |
-| Vis / inserts | Assemblage | 8 € |
-| Capteurs Phase 2 | VL53L1X, VL6180X ×4, VEML7700, ICS-43434, SHT40 | 58 € |
-| LEDs + audio | SK6812, speaker, ampli | 13 € |
+| Item | Detail | Cost |
+|------|--------|------|
+| LilyGo T4-S3 | MCU + AMOLED display | 35 € |
+| MPR121 | Capacitive touch sensor | 8 € |
+| 3.3V regulator | Sensor power supply | 2 € |
+| Connectors | JST, PCB, wires | 15 € |
+| SG90 servos x4 | Locomotion validation (Phase 3a) | 8 € |
+| PLA filament | Otto chassis printing | 20 € |
+| Screws / inserts | Assembly | 8 € |
+| Phase 2 sensors | VL53L1X, VL6180X x4, VEML7700, ICS-43434, SHT40 | 58 € |
+| LEDs + audio | SK6812, speaker, amplifier | 13 € |
 | Level shifter | TXB0104 | 3 € |
-| Pieds caoutchouc | Adhérence | 3 € |
-| Multimètre | Debug | 15 € |
-| Divers | Marge composants | 4 € |
+| Rubber feet | Floor grip | 3 € |
+| Multimeter | Debugging | 15 € |
+| Miscellaneous | Component margin | 4 € |
 | **Total** | | **~192 €** |
 
-### CHIBI complet (mobile) — ~492 €
+### Full CHIBI (mobile) — ~492 €
 
-Robot bipède autonome avec charge Qi, tous les capteurs, servos Dynamixel.
+Autonomous bipedal robot with Qi charging, all sensors, Dynamixel servos.
 
-| Poste | Détail | Coût |
-|-------|--------|------|
-| Phase 1 (ci-dessus) | | 192 € |
-| Dynamixel XL330-M077-T ×4 | Servos locomotion | 100 € |
-| Dynamixel XL330-M288-T | Servo tête | 25 € |
-| Câbles Dynamixel | Bus daisychain | 10 € |
-| Pi Zero 2W + câble caméra | Second cerveau | 26 € |
+| Item | Detail | Cost |
+|------|--------|------|
+| Phase 1 (above) | | 192 € |
+| Dynamixel XL330-M077-T x4 | Locomotion servos | 100 € |
+| Dynamixel XL330-M288-T | Head servo | 25 € |
+| Dynamixel cables | Daisychain bus | 10 € |
+| Pi Zero 2W + camera cable | Second brain | 26 € |
 | Pi Camera 3 NoIR | Vision | 30 € |
-| Batteries LiPo ×2 | 3600mAh total | 16 € |
-| BQ25895 | Gestion charge | 8 € |
-| Module Qi récepteur | Charge sans fil | 8 € |
-| Aimants N35 ×8 | Alignement dock | 4 € |
-| DRV5055 | Capteur Hall | 3 € |
-| Boîtier custom | Filament supplémentaire | 10 € |
-| Divers | Marge intégration | 60 € |
+| LiPo batteries x2 | 3600mAh total | 16 € |
+| BQ25895 | Charge management | 8 € |
+| Qi receiver module | Wireless charging | 8 € |
+| N35 magnets x8 | Dock alignment | 4 € |
+| DRV5055 | Hall sensor | 3 € |
+| Custom enclosure | Additional filament | 10 € |
+| Miscellaneous | Integration margin | 60 € |
 | **Total** | | **~492 €** |
 
-### Projet entier avec dock — ~841 €
+### Full Project with Dock — ~841 €
 
-Installation complète : CHIBI mobile + dock station avec Pi 5.
+Complete setup: mobile CHIBI + dock station with Pi 5.
 
-| Poste | Détail | Coût |
-|-------|--------|------|
-| CHIBI complet (ci-dessus) | | 492 € |
-| Raspberry Pi 5 8GB | Cerveau dock | 95 € |
-| SSD NVMe 256GB | Stockage | 35 € |
-| HAT NVMe | Adaptateur M.2 | 15 € |
-| Active Cooler Pi 5 | Refroidissement | 8 € |
-| Alimentation 27W | USB-C Pi 5 | 15 € |
-| Émetteur Qi 10W | Charge dock | 10 € |
-| Boîtier dock | Impression 3D + visserie | 15 € |
-| Divers dock | Câblage, marge | 156 € |
+| Item | Detail | Cost |
+|------|--------|------|
+| Full CHIBI (above) | | 492 € |
+| Raspberry Pi 5 8GB | Dock brain | 95 € |
+| NVMe SSD 256GB | Storage | 35 € |
+| NVMe HAT | M.2 adapter | 15 € |
+| Active Cooler Pi 5 | Cooling | 8 € |
+| 27W power supply | USB-C for Pi 5 | 15 € |
+| Qi 10W transmitter | Dock charging | 10 € |
+| Dock enclosure | 3D printing + hardware | 15 € |
+| Dock miscellaneous | Wiring, margin | 156 € |
 | **Total** | | **~841 €** |

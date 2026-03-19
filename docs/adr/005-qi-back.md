@@ -1,72 +1,72 @@
-# ADR 005 — Charge Qi : bobine dans le dos vs pieds vs pogo pins
+# ADR 005 — Qi Charging: Coil in the Back vs Feet vs Pogo Pins
 
-**Date** : 2025-03-19
+**Date**: 2025-03-19
 
-**Statut** : Accepté
+**Status**: Accepted
 
-## Contexte
+## Context
 
-CHIBI doit pouvoir se recharger de manière autonome en revenant sur sa dock station. Étant un robot bipède, les pieds sont en mouvement constant pendant la marche, ce qui rend le placement de la bobine de charge critique. Le mécanisme doit être fiable, reproductible, et ne pas nécessiter d'intervention humaine pour aligner CHIBI correctement.
+CHIBI must be able to recharge autonomously by returning to its dock station. Being a bipedal robot, the feet are in constant motion during walking, making the placement of the charging coil critical. The mechanism must be reliable, reproducible, and not require human intervention to align CHIBI correctly.
 
-## Options considérées
+## Options Considered
 
-### Option A — Bobine Qi dans les pieds
+### Option A — Qi Coil in the Feet
 
-- Bobine réceptrice sous les semelles
-- Émetteur horizontal dans la dock (comme un chargeur de téléphone classique)
+- Receiver coil under the soles
+- Horizontal transmitter in the dock (like a standard phone charger)
 
-**Avantages** : concept intuitif (CHIBI se tient « sur » le chargeur).
+**Pros**: intuitive concept (CHIBI stands "on" the charger).
 
-**Inconvénients** : les pieds bougent constamment pendant la marche, l'alignement doit être précis à chaque pas, les articulations des chevilles compliquent le câblage, l'usure mécanique est maximale sur cette zone.
+**Cons**: feet move constantly during walking, alignment must be precise at each step, ankle joints complicate wiring, mechanical wear is maximum in this area.
 
-### Option B — Pogo pins (contacts physiques)
+### Option B — Pogo Pins (physical contacts)
 
-- Contacts pogo pins dans les pieds ou le dos
-- Contacts correspondants sur la dock
+- Pogo pin contacts in the feet or back
+- Matching contacts on the dock
 
-**Avantages** : transfert d'énergie efficace, pas de pertes inductives.
+**Pros**: efficient energy transfer, no inductive losses.
 
-**Inconvénients** : alignement mécanique très précis nécessaire, usure des contacts, oxydation possible, complexité mécanique du mécanisme d'insertion.
+**Cons**: very precise mechanical alignment required, contact wear, possible oxidation, mechanical complexity of the insertion mechanism.
 
-### Option C — Bobine Qi dans le dos (retenue)
+### Option C — Qi Coil in the Back (selected)
 
-- Bobine réceptrice Qi 10W (BQ51051B avec ferrite intégrée) dans le dos de CHIBI
-- Émetteur Qi vertical dans la dock
-- CHIBI recule pour s'aligner avec la dock
-- Aimants N35 6×2mm en anneau (style MagSafe) pour l'alignement
-- Capteur Hall DRV5055 pour confirmer l'alignement
+- Qi 10W receiver coil (BQ51051B with integrated ferrite) in CHIBI's back
+- Vertical Qi transmitter in the dock
+- CHIBI backs up to align with the dock
+- N35 6x2mm magnets in a ring (MagSafe-style) for alignment
+- DRV5055 Hall sensor to confirm alignment
 
-**Avantages** : surface de contact fixe et prévisible (le dos ne bouge pas pendant la marche), alignement magnétique fiable, pas d'usure mécanique.
+**Pros**: fixed and predictable contact surface (the back doesn't move during walking), reliable magnetic alignment, no mechanical wear.
 
-**Inconvénients** : CHIBI doit se retourner pour se charger (recule vers la dock), mécanisme d'éjection à concevoir.
+**Cons**: CHIBI must turn around to charge (backs into the dock), ejection mechanism to design.
 
-## Décision
+## Decision
 
-**Bobine réceptrice Qi 10W dans le dos de CHIBI**, avec émetteur vertical dans la dock et alignement magnétique style MagSafe.
+**Qi 10W receiver coil in CHIBI's back**, with a vertical transmitter in the dock and MagSafe-style magnetic alignment.
 
-Le processus de charge :
-1. CHIBI détecte un niveau de batterie bas
-2. CHIBI se dirige vers la dock et se retourne
-3. CHIBI recule jusqu'à ce que les aimants s'engagent
-4. Le capteur Hall DRV5055 confirme l'alignement
-5. La charge Qi démarre
-6. L'écran passe en mode charge (plugin `charge-screen`)
+The charging process:
+1. CHIBI detects a low battery level
+2. CHIBI navigates toward the dock and turns around
+3. CHIBI backs up until the magnets engage
+4. The DRV5055 Hall sensor confirms alignment
+5. Qi charging begins
+6. The display switches to charge mode (`charge-screen` plugin)
 
-La **question du mécanisme d'éjection** (comment CHIBI se détache de la dock après la charge) est **intentionnellement laissée ouverte**. Les options envisagées incluent une came actionnée par servo, un ressort, ou un électroaimant inversé. Cette décision sera prise lors de la conception mécanique de la dock.
+The **dock ejection mechanism question** (how CHIBI detaches from the dock after charging) is **intentionally left open**. Options under consideration include a servo-actuated cam, a spring, or a reversed electromagnet. This decision will be made during the dock's mechanical design.
 
-## Conséquences
+## Consequences
 
-### Positives
+### Positive
 
-- **Surface fixe** : le dos est la partie la plus stable du robot, pas de mouvement pendant la marche
-- **Alignement fiable** : les aimants N35 en anneau assurent un centrage précis et reproductible
-- **Confirmation électronique** : le capteur Hall DRV5055 permet au firmware de vérifier l'alignement avant de tenter la charge
-- **Sans contact** : pas d'usure mécanique, pas d'oxydation, pas de poussière sur les contacts
-- **Standard Qi** : technologie mature et bien documentée
+- **Fixed surface**: the back is the most stable part of the robot, no movement during walking
+- **Reliable alignment**: N35 ring magnets ensure precise and reproducible centering
+- **Electronic confirmation**: the DRV5055 Hall sensor allows firmware to verify alignment before attempting to charge
+- **Contactless**: no mechanical wear, no oxidation, no dust on contacts
+- **Qi standard**: mature and well-documented technology
 
-### Négatives
+### Negative
 
-- **Éjection** : le mécanisme pour détacher CHIBI de la dock reste à concevoir (question ouverte)
-- **Orientation** : CHIBI doit se retourner (marche arrière) pour se charger, ce qui demande une cinématique de demi-tour fiable
-- **Pertes inductives** : la charge Qi est moins efficace que des contacts directs (~80% vs ~95%)
-- **Aimants** : les aimants N35 pourraient interférer avec la boussole de l'IMU (à vérifier)
+- **Ejection**: the mechanism to detach CHIBI from the dock remains to be designed (open question)
+- **Orientation**: CHIBI must turn around (walk backwards) to charge, requiring reliable U-turn kinematics
+- **Inductive losses**: Qi charging is less efficient than direct contacts (~80% vs ~95%)
+- **Magnets**: N35 magnets could interfere with the IMU compass (to be verified)

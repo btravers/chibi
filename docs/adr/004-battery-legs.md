@@ -1,62 +1,62 @@
-# ADR 004 — Batterie : deux cellules LiPo dans les jambes
+# ADR 004 — Battery: Two LiPo Cells in the Legs
 
-**Date** : 2025-03-19
+**Date**: 2025-03-19
 
-**Statut** : Accepté
+**Status**: Accepted
 
-## Contexte
+## Context
 
-CHIBI est un robot bipède autonome sur batterie. Le passage d'une architecture sur roues à une architecture bipède (Otto DIY) a changé les contraintes d'alimentation et d'équilibre. Un robot bipède est intrinsèquement moins stable qu'un robot à roues — le centre de gravité doit être le plus bas possible pour faciliter la marche.
+CHIBI is a battery-powered autonomous bipedal robot. The switch from a wheeled architecture to a bipedal one (Otto DIY) changed the power and balance constraints. A bipedal robot is inherently less stable than a wheeled robot — the center of gravity must be as low as possible to facilitate walking.
 
-La capacité cible est d'environ 3600mAh (3.7V) pour permettre plusieurs heures d'autonomie avec l'écran AMOLED, les capteurs, le Wi-Fi et les servos.
+The target capacity is approximately 3600mAh (3.7V) to allow several hours of autonomy with the AMOLED display, sensors, Wi-Fi, and servos.
 
-## Options considérées
+## Options Considered
 
-### Option A — Une seule batterie dans le corps
+### Option A — Single Battery in the Body
 
-- Un pack LiPo unique (3600mAh) logé dans le torse
-- Centre de gravité en haut du robot
+- A single LiPo pack (3600mAh) housed in the torso
+- Center of gravity at the top of the robot
 
-**Avantages** : simple à intégrer, un seul connecteur, monitoring trivial.
+**Pros**: simple to integrate, single connector, trivial monitoring.
 
-**Inconvénients** : centre de gravité haut (instabilité bipède), encombrement du torse (espace déjà occupé par les boards et capteurs), pack custom nécessaire.
+**Cons**: high center of gravity (bipedal instability), torso crowding (space already occupied by boards and sensors), custom pack required.
 
-### Option B — Deux cellules dans les jambes (retenue)
+### Option B — Two Cells in the Legs (selected)
 
-- 2× LiPo 1800mAh 3.7V (format standard JST-PH 2mm) dans des logements dédiés dans les jambes
-- Cellules connectées en parallèle (3600mAh total, 3.7V)
-- BQ25895 pour la gestion de charge et le monitoring I2C
+- 2x LiPo 1800mAh 3.7V (standard JST-PH 2mm format) in dedicated compartments in the legs
+- Cells connected in parallel (3600mAh total, 3.7V)
+- BQ25895 for charge management and I2C monitoring
 
-**Avantages** : centre de gravité très bas (stabilité), répartition symétrique de la masse, format standard (upgrade futur facile), libère l'espace du torse.
+**Pros**: very low center of gravity (stability), symmetric mass distribution, standard format (easy future upgrade), frees up torso space.
 
-**Inconvénients** : deux connecteurs à câbler, logements à concevoir dans les jambes, le parallèle nécessite des cellules appairées.
+**Cons**: two connectors to wire, compartments to design in the legs, parallel configuration requires matched cells.
 
-### Option C — Batterie dans les pieds
+### Option C — Battery in the Feet
 
-- Cellules plates dans la semelle des pieds
+- Flat cells in the soles of the feet
 
-**Écarté** : les pieds sont les pièces les plus mobiles et les plus sollicitées mécaniquement. Le câblage serait complexe et fragile au niveau des articulations.
+**Rejected**: the feet are the most mobile and mechanically stressed parts. Wiring would be complex and fragile at the ankle joints.
 
-## Décision
+## Decision
 
-**Deux cellules LiPo 1800mAh 3.7V au format standard JST-PH 2mm**, logées dans les jambes de CHIBI, connectées en parallèle pour fournir 3600mAh total.
+**Two LiPo 1800mAh 3.7V cells in standard JST-PH 2mm format**, housed in CHIBI's legs, connected in parallel to provide 3600mAh total.
 
-Le BQ25895 gère la charge des deux cellules en parallèle et monitore leur état (tension, courant, température) via I2C.
+The BQ25895 manages charging of both cells in parallel and monitors their state (voltage, current, temperature) via I2C.
 
-Les logements dans les jambes sont dimensionnés pour accueillir des cellules au format standard, ce qui permettra à terme un **upgrade vers des cellules Si-C** (silicium-carbone, densité énergétique supérieure) de même format sans modification mécanique.
+The leg compartments are sized to accommodate standard format cells, which will allow a future **upgrade to Si-C cells** (silicon-carbon, higher energy density) of the same form factor without mechanical modification.
 
-## Conséquences
+## Consequences
 
-### Positives
+### Positive
 
-- **Centre de gravité bas** : les batteries dans les jambes lestent le bas du robot, améliorant significativement la stabilité bipède
-- **Répartition symétrique** : masse égale dans chaque jambe, pas de déséquilibre latéral
-- **Format standard** : les cellules JST-PH 2mm sont largement disponibles et interchangeables
-- **Upgrade futur** : le passage aux cellules Si-C (plus denses) ne nécessitera aucune modification mécanique
-- **Espace torse libéré** : plus de place pour les boards, capteurs et câblage
+- **Low center of gravity**: batteries in the legs weigh down the bottom of the robot, significantly improving bipedal stability
+- **Symmetric distribution**: equal mass in each leg, no lateral imbalance
+- **Standard format**: JST-PH 2mm cells are widely available and interchangeable
+- **Future upgrade**: switching to Si-C cells (higher density) will require no mechanical modification
+- **Freed torso space**: more room for boards, sensors, and wiring
 
-### Négatives
+### Negative
 
-- **Câblage** : deux connecteurs à router depuis les jambes vers le BQ25895 dans le torse, à travers les articulations
-- **Appairage** : les deux cellules en parallèle doivent idéalement être du même lot pour un comportement homogène
-- **Conception mécanique** : les logements dans les jambes ajoutent de la complexité à la conception 3D (dimensions exactes à déterminer)
+- **Wiring**: two connectors to route from the legs to the BQ25895 in the torso, through the joints
+- **Cell matching**: the two parallel cells should ideally be from the same batch for consistent behavior
+- **Mechanical design**: the leg compartments add complexity to the 3D design (exact dimensions to be determined)

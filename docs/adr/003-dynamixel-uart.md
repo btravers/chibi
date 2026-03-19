@@ -1,67 +1,67 @@
-# ADR 003 — Servos : bus UART Dynamixel 2.0 vs PWM individuel
+# ADR 003 — Servos: Dynamixel 2.0 UART Bus vs Individual PWM
 
-**Date** : 2025-03-19
+**Date**: 2025-03-19
 
-**Statut** : Accepté
+**Status**: Accepted
 
-## Contexte
+## Context
 
-CHIBI est un robot bipède avec 4 servos de locomotion (2 hanches + 2 chevilles) et 1 servo pour la tête, soit 5 servos au total. Le choix du protocole de communication avec les servos impacte le câblage, les capacités de retour d'information (télémétrie), et la qualité du contrôle de mouvement.
+CHIBI is a bipedal robot with 4 locomotion servos (2 hips + 2 ankles) and 1 head servo, totaling 5 servos. The choice of communication protocol with the servos impacts wiring, feedback capabilities (telemetry), and motion control quality.
 
-L'architecture mécanique est basée sur Otto DIY, un robot bipède open source dont les STL sont disponibles sur Printables.
+The mechanical architecture is based on Otto DIY, an open source bipedal robot whose STL files are available on Printables.
 
-## Options considérées
+## Options Considered
 
-### Option A — PWM individuel avec servos SG90/MG90S
+### Option A — Individual PWM with SG90/MG90S Servos
 
-- 5 fils PWM individuels depuis l'ESP32-S3 vers chaque servo
-- Servos analogiques bon marché (SG90 ~2€, MG90S ~5€)
-- Contrôle en boucle ouverte (pas de retour de position)
+- 5 individual PWM wires from the ESP32-S3 to each servo
+- Cheap analog servos (SG90 ~2€, MG90S ~5€)
+- Open-loop control (no position feedback)
 
-**Avantages** : très bon marché, simple à programmer, abondance de librairies et exemples.
+**Pros**: very cheap, simple to program, abundance of libraries and examples.
 
-**Inconvénients** : 5 GPIOs occupés, pas de retour de position ni de couple (boucle ouverte), câblage en étoile complexe dans un petit boîtier, impossible de détecter un blocage mécanique, usure non détectable.
+**Cons**: 5 GPIOs occupied, no position or torque feedback (open loop), star wiring complex in a small enclosure, impossible to detect mechanical stalling, wear not detectable.
 
-### Option B — Bus UART Dynamixel 2.0 (retenue)
+### Option B — Dynamixel 2.0 UART Bus (selected)
 
-- 5 servos Dynamixel XL330 connectés en daisychain sur un seul bus UART
-- Protocole Dynamixel 2.0 (half-duplex UART, adressage par ID)
-- Télémétrie complète : position exacte, vitesse, couple, température, tension
+- 5 Dynamixel XL330 servos connected in daisychain on a single UART bus
+- Dynamixel 2.0 protocol (half-duplex UART, ID-based addressing)
+- Full telemetry: exact position, speed, torque, temperature, voltage
 
-**Avantages** : un seul câble pour tous les servos (daisychain), retour de position et couple en temps réel, détection de blocage et surchauffe, contrôle précis en boucle fermée.
+**Pros**: single cable for all servos (daisychain), real-time position and torque feedback, stall and overheating detection, precise closed-loop control.
 
-**Inconvénients** : servos plus chers (~25€ l'unité), protocole Dynamixel 2.0 à implémenter en Rust (pas de crate existant), half-duplex UART nécessite une gestion du sens de communication.
+**Cons**: more expensive servos (~25€ each), Dynamixel 2.0 protocol must be implemented in Rust (no existing crate), half-duplex UART requires communication direction management.
 
-### Option C — I2C avec servos PCA9685
+### Option C — I2C with PCA9685 Servos
 
-- Driver PWM PCA9685 sur bus I2C, contrôlant des servos classiques
-- Un seul bus I2C pour le driver, mais servos toujours en boucle ouverte
+- PCA9685 PWM driver on I2C bus, controlling standard servos
+- Single I2C bus for the driver, but servos still open-loop
 
-**Écarté** : résout le problème du nombre de GPIOs mais pas celui du retour de position. Ajoute un composant (PCA9685) sans apporter la télémétrie.
+**Rejected**: solves the GPIO count problem but not the position feedback issue. Adds a component (PCA9685) without providing telemetry.
 
-## Décision
+## Decision
 
-**Dynamixel XL330 sur bus UART daisychain** avec protocole Dynamixel 2.0.
+**Dynamixel XL330 on UART daisychain bus** with Dynamixel 2.0 protocol.
 
-- 4× XL330-M077-T (1.0 Nm) pour les hanches et chevilles
-- 1× XL330-M288-T (0.34 Nm) pour la tête (couple plus faible suffisant)
-- Implémentation du protocole Dynamixel 2.0 en Rust comme **contribution open source**
+- 4x XL330-M077-T (1.0 Nm) for hips and ankles
+- 1x XL330-M288-T (0.34 Nm) for the head (lower torque sufficient)
+- Dynamixel 2.0 protocol implementation in Rust as an **open source contribution**
 
-La validation initiale de la cinématique (Phase 3a) se fait avec des SG90 bon marché sur le châssis Otto DIY, avant la migration vers les Dynamixel (Phase 3b).
+Initial kinematics validation (Phase 3a) uses cheap SG90 servos on the Otto DIY chassis, before migrating to Dynamixel (Phase 3b).
 
-## Conséquences
+## Consequences
 
-### Positives
+### Positive
 
-- **Câblage simplifié** : un seul câble UART traverse le corps en daisychain au lieu de 5 fils individuels
-- **Télémétrie** : température, couple et position exacte accessibles en temps réel
-- **Détection de problèmes** : blocage mécanique, surchauffe, usure détectables par le firmware
-- **Contrôle précis** : boucle fermée avec retour de position, mouvements plus fluides
-- **Contribution open source** : le driver Dynamixel 2.0 en Rust bénéficiera à toute la communauté Rust embedded
+- **Simplified wiring**: a single UART cable runs through the body in daisychain instead of 5 individual wires
+- **Telemetry**: temperature, torque and exact position accessible in real time
+- **Problem detection**: mechanical stalling, overheating, and wear detectable by the firmware
+- **Precise control**: closed-loop with position feedback, smoother movements
+- **Open source contribution**: the Dynamixel 2.0 Rust driver will benefit the entire Rust embedded community
 
-### Négatives
+### Negative
 
-- **Coût** : 5 servos Dynamixel = ~135€ vs ~10€ pour 5 SG90
-- **Développement** : le protocole Dynamixel 2.0 doit être implémenté from scratch en Rust (pas de crate existant)
-- **Half-duplex** : la gestion du sens de communication UART ajoute de la complexité au driver
-- **Approvisionnement** : les XL330 sont parfois en rupture de stock chez Robotis
+- **Cost**: 5 Dynamixel servos = ~135€ vs ~10€ for 5 SG90s
+- **Development**: Dynamixel 2.0 protocol must be implemented from scratch in Rust (no existing crate)
+- **Half-duplex**: UART communication direction management adds complexity to the driver
+- **Supply**: XL330s are sometimes out of stock at Robotis

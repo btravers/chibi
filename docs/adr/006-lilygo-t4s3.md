@@ -1,67 +1,67 @@
-# ADR 006 — Board : LilyGo T4-S3 vs composants séparés
+# ADR 006 — Board: LilyGo T4-S3 vs Separate Components
 
-**Date** : 2025-03-19
+**Date**: 2025-03-19
 
-**Statut** : Accepté
+**Status**: Accepted
 
-## Contexte
+## Context
 
-L'écran cible pour les expressions de CHIBI est le RM690B0, un AMOLED 2.41" de résolution 600×450 pixels avec 16.7M de couleurs. Ses noirs parfaits sont essentiels : le fond noir est « gratuit » (pixels éteints = zéro consommation), ce qui fait ressortir les yeux de manière spectaculaire.
+The target display for CHIBI's expressions is the RM690B0, a 2.41" AMOLED with 600x450 pixel resolution and 16.7M colors. Its perfect blacks are essential: the black background is "free" (pixels off = zero power consumption), making the eyes stand out spectacularly.
 
-Il faut choisir entre utiliser une board intégrée qui combine le MCU et l'écran, ou assembler les composants séparément (ESP32-S3 DevKit + écran connecté manuellement).
+We need to choose between using an integrated board that combines the MCU and display, or assembling the components separately (ESP32-S3 DevKit + manually connected display).
 
-## Options considérées
+## Options Considered
 
-### Option A — Composants séparés (ESP32-S3 DevKit + écran)
+### Option A — Separate Components (ESP32-S3 DevKit + display)
 
-- ESP32-S3-DevKitC-1 (~8€) + écran RM690B0 nu (~25€)
-- Câblage QSPI manuel entre la board et l'écran
-- Possibilité d'utiliser un autre écran (GC9A01 rond, ST7789, etc.)
+- ESP32-S3-DevKitC-1 (~8€) + bare RM690B0 display (~25€)
+- Manual QSPI wiring between the board and the display
+- Possibility to use a different display (round GC9A01, ST7789, etc.)
 
-**Avantages** : flexibilité du choix d'écran, composants individuellement remplaçables, potentiellement moins cher.
+**Pros**: display choice flexibility, individually replaceable components, potentially cheaper.
 
-**Inconvénients** : câblage QSPI complexe (6+ fils haute fréquence), pas de garantie de fonctionnement du driver Rust sans la board de référence, pas d'IMU intégré, plus de place occupée dans le boîtier.
+**Cons**: complex QSPI wiring (6+ high-frequency wires), no guarantee the Rust driver works without the reference board, no integrated IMU, more space occupied in the enclosure.
 
-### Option B — LilyGo T4-S3 (retenue)
+### Option B — LilyGo T4-S3 (selected)
 
-- Board intégrée : ESP32-S3R8 + RM690B0 AMOLED 2.41" + interface QSPI
-- QMI8658 IMU intégré sur la board
-- 8MB PSRAM pour le framebuffer
-- Schémas et pinout documentés par LilyGo
+- Integrated board: ESP32-S3R8 + RM690B0 AMOLED 2.41" + QSPI interface
+- QMI8658 IMU integrated on the board
+- 8MB PSRAM for the framebuffer
+- Schematics and pinout documented by LilyGo
 
-**Avantages** : tout est câblé et testé, le driver `rm690b0-rs` cible spécifiquement cette board, framebuffer PSRAM + DMA déjà configuré dans les exemples, IMU inclus gratuitement.
+**Pros**: everything is wired and tested, the `rm690b0-rs` driver specifically targets this board, PSRAM + DMA framebuffer already configured in examples, IMU included for free.
 
-**Inconvénients** : dépendance à un fournisseur unique (LilyGo), moins de flexibilité si l'on veut changer d'écran.
+**Cons**: single vendor dependency (LilyGo), less flexibility if wanting to change the display.
 
-### Option C — Autre board intégrée (ESP32-S3 + GC9A01)
+### Option C — Other Integrated Board (ESP32-S3 + GC9A01)
 
-- Boards avec écran rond GC9A01 (ex: Waveshare ESP32-S3 1.28")
+- Boards with round GC9A01 display (e.g., Waveshare ESP32-S3 1.28")
 
-**Écarté** : le GC9A01 est un écran rond de 240×240 pixels, trop petit et trop basse résolution pour afficher deux yeux expressifs côte à côte. Le format rectangulaire du RM690B0 (600×450) est nécessaire pour le design visé (deux yeux sur un seul écran, style EMO).
+**Rejected**: the GC9A01 is a round 240x240 pixel display, too small and too low resolution to display two expressive eyes side by side. The rectangular format of the RM690B0 (600x450) is required for the target design (two eyes on a single screen, EMO-style).
 
-## Décision
+## Decision
 
-**LilyGo T4-S3** comme board principale du firmware CHIBI.
+**LilyGo T4-S3** as the main firmware board for CHIBI.
 
-Raisons déterminantes :
-1. Le driver Rust `rm690b0-rs` (maintenu par The Embedded Rustacean) **cible spécifiquement cette board** — les exemples, la configuration PSRAM/DMA, et les pinouts sont documentés pour le T4-S3
-2. L'écran RM690B0 AMOLED est **déjà connecté en QSPI** — pas de câblage haute fréquence à faire
-3. Le **QMI8658 IMU est intégré** — un capteur de moins à câbler et à loger dans le boîtier
-4. Le **framebuffer en PSRAM** (8MB) avec transferts DMA est déjà configuré dans les exemples du driver
-5. Les **schémas sont disponibles** — pas de reverse engineering nécessaire
+Key reasons:
+1. The Rust driver `rm690b0-rs` (maintained by The Embedded Rustacean) **specifically targets this board** — examples, PSRAM/DMA configuration, and pinouts are documented for the T4-S3
+2. The RM690B0 AMOLED display is **already connected via QSPI** — no high-frequency wiring required
+3. The **QMI8658 IMU is integrated** — one fewer sensor to wire and house in the enclosure
+4. The **PSRAM framebuffer** (8MB) with DMA transfers is already configured in the driver examples
+5. **Schematics are available** — no reverse engineering needed
 
-## Conséquences
+## Consequences
 
-### Positives
+### Positive
 
-- **~2€ d'économie** par rapport aux composants séparés (T4-S3 ~35€ vs DevKit ~8€ + écran nu ~25€ + connecteurs ~4€)
-- **Moins de câblage** : écran QSPI et IMU déjà connectés, gain de place dans le boîtier
-- **Migration directe** vers `rm690b0-rs` : le driver est testé et maintenu pour cette board exacte
-- **IMU gratuit** : le QMI8658 intégré fournit accéléromètre et gyroscope sans composant supplémentaire
-- **Fiabilité** : connexion QSPI haute fréquence faite en usine, pas de risque de mauvais contact
+- **~2€ savings** compared to separate components (T4-S3 ~35€ vs DevKit ~8€ + bare display ~25€ + connectors ~4€)
+- **Less wiring**: QSPI display and IMU already connected, space savings in the enclosure
+- **Direct migration** to `rm690b0-rs`: the driver is tested and maintained for this exact board
+- **Free IMU**: the integrated QMI8658 provides accelerometer and gyroscope without additional components
+- **Reliability**: high-frequency QSPI connection made in factory, no risk of bad contacts
 
-### Négatives
+### Negative
 
-- **Dépendance fournisseur** : si LilyGo arrête la production du T4-S3, il faudra migrer vers une autre solution
-- **Flexibilité réduite** : changer d'écran nécessiterait de changer de board
-- **Form factor** : la taille et la forme du T4-S3 contraignent la conception du boîtier
+- **Vendor dependency**: if LilyGo discontinues the T4-S3, migration to another solution will be needed
+- **Reduced flexibility**: changing the display would require changing the board
+- **Form factor**: the T4-S3's size and shape constrain the enclosure design

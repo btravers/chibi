@@ -1,166 +1,166 @@
 # CHIBI — Roadmap
 
-Roadmap en 8 phases progressives, de l'allumage des yeux à l'IA locale embarquée.
+Progressive 8-phase roadmap, from lighting up the eyes to on-device AI.
 
 ---
 
-## Phase 1 — Allumer les yeux
+## Phase 1 — Light Up the Eyes
 
-**Objectif** : Premier signe de vie — afficher des yeux animés sur l'écran AMOLED.
+**Goal**: First sign of life — display animated eyes on the AMOLED screen.
 
-- Mise en place du projet Rust + Embassy pour ESP32-S3
-- Intégration du driver `rm690b0-rs` pour l'écran AMOLED RM690B0 (LilyGo T4-S3)
-- Framebuffer en PSRAM (8MB) avec transferts DMA
-- Rendu des yeux paramétriques avec `embedded-graphics` (ouverture, position pupille, inclinaison)
-- Animations de base : clignement, suivi aléatoire, idle
-- Intégration du capteur tactile MPR121 (12 points capacitifs, tête) — réaction au toucher
-- Moteur émotionnel minimal : axes valence (triste ↔ heureux) et énergie (calme ↔ excité)
+- Set up Rust + Embassy project for ESP32-S3
+- Integrate the `rm690b0-rs` driver for the RM690B0 AMOLED display (LilyGo T4-S3)
+- PSRAM framebuffer (8MB) with DMA transfers
+- Render parametric eyes with `embedded-graphics` (aperture, pupil position, tilt)
+- Basic animations: blinking, random tracking, idle
+- Integrate MPR121 capacitive touch sensor (12 channels, head) — react to touch
+- Minimal emotion engine: valence (sad ↔ happy) and arousal (calm ↔ excited) axes
 
-**Matériel** : LilyGo T4-S3, MPR121 breakout (Adafruit)
-
----
-
-## Phase 2 — Capteurs & réactivité
-
-**Objectif** : CHIBI perçoit son environnement et y réagit.
-
-- VL53L1X (ToF laser, portée 4m) — détection obstacles et présence
-- VL6180X ×4 — anti-chute, montés aux 4 coins sous les pieds
-- VEML7700 — adaptation à la lumière ambiante (expressions plus sombres la nuit)
-- ICS-43434 MEMS I2S — réaction aux sons (clap, voix)
-- SHT40 Sensirion — température et humidité ambiante
-- QMI8658 IMU (intégré T4-S3) — détection orientation, chute, secousses
-- LEDs SK6812 — rétroéclairage expressif synchronisé aux émotions
-- Extension du moteur émotionnel : plus de réactions, transitions fluides entre états
-
-**Matériel** : VL53L1X, VL6180X ×4, VEML7700, ICS-43434, SHT40
+**Hardware**: LilyGo T4-S3, MPR121 breakout (Adafruit)
 
 ---
 
-## Phase 3 — Locomotion bipède
+## Phase 2 — Sensors & Reactivity
 
-**Objectif** : CHIBI marche sur deux jambes.
+**Goal**: CHIBI perceives its environment and reacts to it.
 
-### Étape 3a — Validation avec SG90
+- VL53L1X (ToF laser, 4m range) — obstacle and presence detection
+- VL6180X x4 — edge detection, mounted at all 4 corners under the feet
+- VEML7700 — ambient light adaptation (darker expressions at night)
+- ICS-43434 MEMS I2S — sound reaction (claps, voice)
+- SHT40 Sensirion — ambient temperature and humidity
+- QMI8658 IMU (integrated on T4-S3) — orientation, fall, and shake detection
+- SK6812 LEDs — expressive backlighting synchronized with emotions
+- Extended emotion engine: more reactions, smooth transitions between states
 
-- Assemblage du châssis Otto DIY (STL de Printables)
-- 4 servos SG90 (PWM) pour valider la cinématique de marche
-- Animations de base : marche avant/arrière, rotation, danse simple
-- Validation de l'équilibre et du centre de gravité
-
-### Étape 3b — Migration Dynamixel
-
-- Remplacement des SG90 par 4× Dynamixel XL330-M077-T (hanches + chevilles)
-- Ajout du servo tête Dynamixel XL330-M288-T
-- Implémentation du protocole Dynamixel 2.0 en Rust (contribution open source)
-  - Communication bus UART daisychain
-  - Lecture télémétrie : température, couple, position exacte
-  - Commandes : goal position, moving speed, torque enable
-- Marche améliorée avec retour de position et couple
-
-**Matériel** : Châssis Otto DIY (impression 3D), SG90 ×4 (validation), puis XL330-M077-T ×4 + XL330-M288-T ×1
+**Hardware**: VL53L1X, VL6180X x4, VEML7700, ICS-43434, SHT40
 
 ---
 
-## Phase 4 — Charge Qi + Dock MVP
+## Phase 3 — Bipedal Locomotion
 
-**Objectif** : CHIBI se recharge sans fil et a un boîtier custom.
+**Goal**: CHIBI walks on two legs.
 
-- Conception du boîtier custom dans Fusion 360 (basé sur Otto DIY)
-- Logements pour 2× LiPo 1800mAh dans les jambes (format JST-PH 2mm standard)
-- Intégration du BQ25895 (gestion charge, monitoring I2C)
-- Bobine réceptrice Qi 10W (BQ51051B) dans le dos
-- Aimants N35 6×2mm (alignement style MagSafe)
-- Capteur Hall DRV5055 — confirmation alignement dock
-- Intégration Raspberry Pi Zero 2W dans le boîtier
-- Pi Camera Module 3 NoIR — vision de base
-- Dock MVP : émetteur Qi vertical, alimentation
+### Step 3a — Validation with SG90
 
-**Matériel** : Batteries LiPo ×2, BQ25895, bobine Qi + BQ51051B, aimants N35, DRV5055, Pi Zero 2W, Pi Camera 3 NoIR
+- Assemble Otto DIY chassis (STL files from Printables)
+- 4 SG90 servos (PWM) to validate walking kinematics
+- Basic animations: walk forward/backward, rotation, simple dance
+- Validate balance and center of gravity
 
----
+### Step 3b — Dynamixel Migration
 
-## Phase 5 — Wi-Fi + API REST
+- Replace SG90s with 4x Dynamixel XL330-M077-T (hips + ankles)
+- Add Dynamixel XL330-M288-T head servo
+- Implement Dynamixel 2.0 protocol in Rust (open source contribution)
+  - UART daisychain bus communication
+  - Telemetry readback: temperature, torque, exact position
+  - Commands: goal position, moving speed, torque enable
+- Improved walking with position and torque feedback
 
-**Objectif** : CHIBI est pilotable par réseau.
-
-- Serveur HTTP embarqué avec `picoserve` sur l'ESP32-S3
-- `embassy-net` pour la gestion Wi-Fi
-- API sémantique : `/emotion/event`, `/notification`, `/display/text`, `/state`
-- API primitive : `/display/expression`, `/motion/dance`, `/led/color`, `/sensors`
-- WebSocket pour le streaming d'état en temps réel
-- Communication UART entre ESP32-S3 et Pi Zero 2W
-- Dock complète : Raspberry Pi 5 8GB + SSD NVMe 256GB
-- Broker MQTT (Mosquitto) sur le Pi 5
-- Serveur OTA sur le Pi 5
-
-**Matériel** : Raspberry Pi 5 8GB, SSD NVMe 256GB, active cooler, boîtier dock
+**Hardware**: Otto DIY chassis (3D printed), SG90 x4 (validation), then XL330-M077-T x4 + XL330-M288-T x1
 
 ---
 
-## Phase 6 — Écosystème plugins
+## Phase 4 — Qi Charging + Dock MVP
 
-**Objectif** : CHIBI devient une plateforme extensible.
+**Goal**: CHIBI charges wirelessly and has a custom enclosure.
 
-- Plugin manager sur le Pi 5 (découverte, installation, mise à jour)
-- Système de priorités et fusion d'états entre plugins
-- Plugins officiels :
-  - `github-ci` — réactions aux GitHub Actions
-  - `weather` — humeur selon la météo locale
-  - `pomodoro` — compagnon de sessions
-  - `home-assistant` — intégration domotique
-  - `mqtt-bridge` — bridge IoT générique
-  - `dev-mood` — connecté à l'IDE
-  - `charge-screen` — écran d'informations pendant la charge
-- `chibi-cli` — outil en ligne de commande (`chibi install`, `chibi enable`, `chibi status`)
-- Registry de plugins (format de manifeste, validation)
-- Companion app Tauri + Leptos (configuration, visualisation, logs)
+- Design custom enclosure in Fusion 360 (based on Otto DIY)
+- Battery compartments for 2x LiPo 1800mAh in the legs (standard JST-PH 2mm format)
+- BQ25895 integration (charge management, I2C monitoring)
+- Qi 10W receiver coil (BQ51051B) in the back
+- N35 6x2mm magnets (MagSafe-style alignment)
+- DRV5055 Hall sensor — dock alignment confirmation
+- Raspberry Pi Zero 2W integration in the enclosure
+- Pi Camera Module 3 NoIR — basic vision
+- Dock MVP: vertical Qi transmitter, power supply
+
+**Hardware**: LiPo batteries x2, BQ25895, Qi coil + BQ51051B, N35 magnets, DRV5055, Pi Zero 2W, Pi Camera 3 NoIR
 
 ---
 
-## Phase 7 — Mémoire & personnalité évolutive
+## Phase 5 — Wi-Fi + REST API
 
-**Objectif** : CHIBI développe une personnalité unique au fil du temps.
+**Goal**: CHIBI is controllable over the network.
 
-- Persistance en flash (NVS) des paramètres de personnalité
-- Historique des interactions (fréquence de caresses, patterns d'utilisation)
-- Adaptation progressive des réactions (CHIBI « apprend » les préférences)
-- Paramètres de tempérament configurables (timide ↔ extraverti, calme ↔ nerveux)
-- Journaux d'humeur consultables via l'app companion
+- Embedded HTTP server with `picoserve` on the ESP32-S3
+- `embassy-net` for Wi-Fi management
+- Semantic API: `/emotion/event`, `/notification`, `/display/text`, `/state`
+- Primitive API: `/display/expression`, `/motion/dance`, `/led/color`, `/sensors`
+- WebSocket for real-time state streaming
+- UART communication between ESP32-S3 and Pi Zero 2W
+- Full dock: Raspberry Pi 5 8GB + NVMe SSD 256GB
+- MQTT broker (Mosquitto) on the Pi 5
+- OTA server on the Pi 5
 
----
-
-## Phase 8 — IA locale
-
-**Objectif** : CHIBI comprend et interagit vocalement.
-
-- Wake word detection sur le Pi Zero 2W
-- Vision : détection de visages, reconnaissance de gestes (Pi Camera)
-- LLM local via Ollama sur le Pi 5 (conversation basique, personnalité)
-- Text-to-speech local pour réponses vocales
-- Intégration au moteur émotionnel (le LLM influence l'humeur)
+**Hardware**: Raspberry Pi 5 8GB, NVMe SSD 256GB, active cooler, dock enclosure
 
 ---
 
-## Questions ouvertes
+## Phase 6 — Plugin Ecosystem
 
-Ces questions seront tranchées au cours du développement :
+**Goal**: CHIBI becomes an extensible platform.
 
-- **Mécanisme d'éjection dock** — Comment CHIBI se détache de la dock après la charge ? Came actionnée par servo, ressort, électroaimant ? À décider lors de la conception mécanique de la dock.
-- **Format exact des logements batterie** — Les dimensions précises des cavités dans les jambes dépendent de la conception mécanique finale. Le format JST-PH 2mm est fixé, mais la géométrie exacte reste à définir.
-- **Protocole OTA** — Le mécanisme de mise à jour over-the-air du firmware ESP32-S3 doit être défini. Options : HTTP pull depuis le Pi 5, push via MQTT, ou intégration avec un service dédié.
+- Plugin manager on the Pi 5 (discovery, installation, updates)
+- Priority system and state merging between plugins
+- Official plugins:
+  - `github-ci` — reactions to GitHub Actions
+  - `weather` — mood based on local weather
+  - `pomodoro` — session companion
+  - `home-assistant` — home automation integration
+  - `mqtt-bridge` — generic IoT bridge
+  - `dev-mood` — connected to the IDE
+  - `charge-screen` — information display while charging
+- `chibi-cli` — command-line tool (`chibi install`, `chibi enable`, `chibi status`)
+- Plugin registry (manifest format, validation)
+- Companion app with Tauri + Leptos (configuration, visualization, logs)
+
+---
+
+## Phase 7 — Memory & Evolving Personality
+
+**Goal**: CHIBI develops a unique personality over time.
+
+- Flash persistence (NVS) for personality parameters
+- Interaction history (petting frequency, usage patterns)
+- Progressive adaptation of reactions (CHIBI "learns" preferences)
+- Configurable temperament parameters (shy ↔ outgoing, calm ↔ nervous)
+- Mood logs viewable through the companion app
+
+---
+
+## Phase 8 — Local AI
+
+**Goal**: CHIBI understands and interacts vocally.
+
+- Wake word detection on the Pi Zero 2W
+- Vision: face detection, gesture recognition (Pi Camera)
+- Local LLM via Ollama on the Pi 5 (basic conversation, personality)
+- Local text-to-speech for voice responses
+- Integration with the emotion engine (the LLM influences mood)
+
+---
+
+## Open Questions
+
+These questions will be resolved during development:
+
+- **Dock ejection mechanism** — How does CHIBI detach from the dock after charging? Servo-actuated cam, spring, electromagnet? To be decided during the mechanical design of the dock.
+- **Exact battery compartment dimensions** — The precise cavity dimensions in the legs depend on the final mechanical design. The JST-PH 2mm format is fixed, but the exact geometry remains to be defined.
+- **OTA protocol** — The over-the-air firmware update mechanism for the ESP32-S3 needs to be defined. Options: HTTP pull from the Pi 5, push via MQTT, or integration with a dedicated service.
 
 ---
 
 ## Architecture Decision Records (ADRs)
 
-Les décisions d'architecture clés sont documentées dans [`docs/adr/`](docs/adr/) :
+Key architecture decisions are documented in [`docs/adr/`](docs/adr/):
 
-| ADR | Titre |
+| ADR | Title |
 |-----|-------|
-| [001](docs/adr/001-plugin-api.md) | API Plugin : REST + WebSocket vs MQTT seul |
-| [002](docs/adr/002-emotion-engine.md) | Moteur émotionnel : axes continus vs états discrets |
-| [003](docs/adr/003-dynamixel-uart.md) | Servos : bus UART Dynamixel 2.0 vs PWM individuel |
-| [004](docs/adr/004-battery-legs.md) | Batterie : deux cellules LiPo dans les jambes |
-| [005](docs/adr/005-qi-back.md) | Charge Qi : bobine dans le dos vs pieds vs pogo pins |
-| [006](docs/adr/006-lilygo-t4s3.md) | Board : LilyGo T4-S3 vs composants séparés |
+| [001](docs/adr/001-plugin-api.md) | Plugin API: REST + WebSocket vs MQTT Only |
+| [002](docs/adr/002-emotion-engine.md) | Emotion Engine: Continuous Axes vs Discrete States |
+| [003](docs/adr/003-dynamixel-uart.md) | Servos: Dynamixel 2.0 UART Bus vs Individual PWM |
+| [004](docs/adr/004-battery-legs.md) | Battery: Two LiPo Cells in the Legs |
+| [005](docs/adr/005-qi-back.md) | Qi Charging: Coil in the Back vs Feet vs Pogo Pins |
+| [006](docs/adr/006-lilygo-t4s3.md) | Board: LilyGo T4-S3 vs Separate Components |

@@ -1,64 +1,64 @@
-# ADR 001 — API Plugin : REST + WebSocket vs MQTT seul
+# ADR 001 — Plugin API: REST + WebSocket vs MQTT Only
 
-**Date** : 2025-03-19
+**Date**: 2025-03-19
 
-**Statut** : Accepté
+**Status**: Accepted
 
-## Contexte
+## Context
 
-CHIBI est conçu comme une plateforme extensible via plugins. Un plugin est un processus autonome, écrit dans n'importe quel langage, qui pilote le comportement du robot (émotions, mouvements, affichage). Il faut choisir le protocole de communication entre les plugins et le firmware embarqué sur l'ESP32-S3.
+CHIBI is designed as an extensible platform through plugins. A plugin is a standalone process, written in any language, that controls the robot's behavior (emotions, movements, display). We need to choose the communication protocol between plugins and the embedded firmware on the ESP32-S3.
 
-Le système doit être accessible au plus grand nombre de développeurs, fonctionner en réseau local, et supporter à la fois des commandes ponctuelles (déclencher une émotion) et du streaming continu (état des capteurs en temps réel).
+The system must be accessible to the widest range of developers, work on a local network, and support both one-off commands (triggering an emotion) and continuous streaming (real-time sensor state).
 
-## Options considérées
+## Options Considered
 
-### Option A — MQTT seul
+### Option A — MQTT Only
 
-- Broker Mosquitto sur le Pi 5 de la dock
-- Les plugins publient sur des topics (`chibi/emotion/event`, `chibi/motion/dance`)
-- Le firmware souscrit aux topics pertinents
-- Streaming d'état via topics de publication (`chibi/state`, `chibi/sensors`)
+- Mosquitto broker on the dock's Pi 5
+- Plugins publish to topics (`chibi/emotion/event`, `chibi/motion/dance`)
+- Firmware subscribes to relevant topics
+- State streaming via publish topics (`chibi/state`, `chibi/sensors`)
 
-**Avantages** : protocole léger, bien adapté à l'IoT, pub/sub natif, découplage naturel.
+**Pros**: lightweight protocol, well suited to IoT, native pub/sub, natural decoupling.
 
-**Inconvénients** : nécessite un broker (dépendance à la dock), MQTT est moins familier que HTTP pour la majorité des développeurs, pas de sémantique requête/réponse native, debug plus complexe (pas de `curl`).
+**Cons**: requires a broker (dock dependency), MQTT is less familiar than HTTP for most developers, no native request/response semantics, more complex debugging (no `curl`).
 
-### Option B — REST + WebSocket (retenue)
+### Option B — REST + WebSocket (selected)
 
-- Serveur HTTP embarqué directement sur l'ESP32-S3 via `picoserve`
-- Les plugins envoient des requêtes HTTP standard (`POST /emotion/event`, `GET /state`)
-- WebSocket pour le streaming d'état en temps réel
-- MQTT conservé uniquement pour l'intégration Home Assistant
+- Embedded HTTP server directly on the ESP32-S3 via `picoserve`
+- Plugins send standard HTTP requests (`POST /emotion/event`, `GET /state`)
+- WebSocket for real-time state streaming
+- MQTT kept only for Home Assistant integration
 
-**Avantages** : HTTP est universel (tout langage a un client HTTP), testable avec `curl`, sémantique requête/réponse claire, pas de dépendance à un broker, fonctionne même sans dock.
+**Pros**: HTTP is universal (every language has an HTTP client), testable with `curl`, clear request/response semantics, no broker dependency, works even without the dock.
 
-**Inconvénients** : un peu plus lourd que MQTT sur l'ESP32, WebSocket à maintenir côté firmware.
+**Cons**: slightly heavier than MQTT on the ESP32, WebSocket must be maintained on the firmware side.
 
 ### Option C — gRPC
 
-- Communication via Protocol Buffers et gRPC
+- Communication via Protocol Buffers and gRPC
 
-**Écarté** : trop lourd pour un microcontrôleur, écosystème embedded quasi inexistant.
+**Rejected**: too heavy for a microcontroller, virtually nonexistent embedded ecosystem.
 
-## Décision
+## Decision
 
-**REST + WebSocket** comme protocole principal de l'API plugin, avec `picoserve` comme serveur HTTP embarqué sur l'ESP32-S3. MQTT reste utilisé pour la communication avec Home Assistant via le plugin `mqtt-bridge`, mais n'est pas le protocole principal.
+**REST + WebSocket** as the primary plugin API protocol, with `picoserve` as the embedded HTTP server on the ESP32-S3. MQTT remains used for Home Assistant communication via the `mqtt-bridge` plugin, but is not the primary protocol.
 
-Deux niveaux d'API sont définis :
-- **API sémantique** (haut niveau) : événements métier (`/emotion/event`, `/notification`)
-- **API primitive** (bas niveau) : contrôle direct des actuateurs (`/display/expression`, `/motion/dance`)
+Two API levels are defined:
+- **Semantic API** (high level): business events (`/emotion/event`, `/notification`)
+- **Primitive API** (low level): direct actuator control (`/display/expression`, `/motion/dance`)
 
-## Conséquences
+## Consequences
 
-### Positives
+### Positive
 
-- Tout développeur peut écrire un plugin avec un simple client HTTP
-- Debug facile avec `curl` ou Postman
-- CHIBI fonctionne en mode autonome (sans dock) — le serveur HTTP est embarqué
-- `picoserve` est inspiré d'Axum, API familière pour les développeurs Rust
+- Any developer can write a plugin with a simple HTTP client
+- Easy debugging with `curl` or Postman
+- CHIBI works in standalone mode (without dock) — the HTTP server is embedded
+- `picoserve` is inspired by Axum, a familiar API for Rust developers
 
-### Négatives
+### Negative
 
-- Le serveur HTTP sur ESP32-S3 consomme plus de ressources qu'un client MQTT
-- WebSocket ajoute de la complexité au firmware
-- Les plugins doivent connaître l'adresse IP de CHIBI (résolu par mDNS)
+- The HTTP server on ESP32-S3 consumes more resources than an MQTT client
+- WebSocket adds complexity to the firmware
+- Plugins need to know CHIBI's IP address (solved by mDNS)

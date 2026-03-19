@@ -1,67 +1,67 @@
-# ADR 002 — Moteur émotionnel : axes continus vs états discrets
+# ADR 002 — Emotion Engine: Continuous Axes vs Discrete States
 
-**Date** : 2025-03-19
+**Date**: 2025-03-19
 
-**Statut** : Accepté
+**Status**: Accepted
 
-## Contexte
+## Context
 
-CHIBI doit exprimer des émotions via son écran AMOLED (yeux, sourcils, bouche) et ses LEDs. Plusieurs plugins peuvent simultanément vouloir influencer l'état émotionnel (le plugin CI/CD après un échec de build, le plugin météo qui reflète la pluie, le plugin pomodoro pendant une session). Il faut un modèle émotionnel qui permette la fusion de ces influences et des transitions fluides entre états.
+CHIBI must express emotions through its AMOLED screen (eyes, eyebrows, mouth) and LEDs. Multiple plugins may simultaneously want to influence the emotional state (the CI/CD plugin after a build failure, the weather plugin reflecting rain, the pomodoro plugin during a session). We need an emotional model that allows merging these influences and smooth transitions between states.
 
-## Options considérées
+## Options Considered
 
-### Option A — États discrets (idle, happy, sad, angry, surprised...)
+### Option A — Discrete States (idle, happy, sad, angry, surprised...)
 
-- Enum fini d'états émotionnels
-- Chaque plugin demande un état précis
-- Le dernier plugin à écrire gagne (ou système de priorité simple)
+- Finite enum of emotional states
+- Each plugin requests a specific state
+- Last plugin to write wins (or simple priority system)
 
-**Avantages** : simple à implémenter, facile à comprendre pour les développeurs de plugins.
+**Pros**: simple to implement, easy for plugin developers to understand.
 
-**Inconvénients** : transitions brusques entre états, pas de nuance (un peu triste vs très triste), conflits quand deux plugins veulent des états différents, nombre d'expressions limité par le nombre d'états définis.
+**Cons**: abrupt transitions between states, no nuance (slightly sad vs very sad), conflicts when two plugins want different states, number of expressions limited by the number of defined states.
 
-### Option B — Axes continus valence + énergie (retenue)
+### Option B — Continuous Valence + Arousal Axes (selected)
 
-- Deux axes continus : **valence** (triste ↔ heureux, -1.0 à +1.0) et **énergie** (calme ↔ excité, 0.0 à 1.0)
-- Les expressions sont **paramétriques** : les yeux, sourcils et bouche sont générés dynamiquement à partir des valeurs des axes (ouverture des yeux, inclinaison des sourcils, courbure de la bouche, position de la pupille)
-- Fusion des influences par **layers de plugins** avec priorité (0–100) et durée d'effet
-- Interpolation fluide entre les positions sur les axes
+- Two continuous axes: **valence** (sad ↔ happy, -1.0 to +1.0) and **arousal** (calm ↔ excited, 0.0 to 1.0)
+- Expressions are **parametric**: eyes, eyebrows and mouth are dynamically generated from axis values (eye aperture, eyebrow tilt, mouth curvature, pupil position)
+- Influence merging via **plugin layers** with priority (0–100) and effect duration
+- Smooth interpolation between positions on the axes
 
-**Avantages** : expressions infiniment variées, transitions douces, fusion naturelle des influences multiples, les plugins n'ont pas besoin de connaître les expressions disponibles.
+**Pros**: infinitely varied expressions, smooth transitions, natural merging of multiple influences, plugins don't need to know the available expressions.
 
-**Inconvénients** : plus complexe à implémenter, mapping axes → paramètres visuels à calibrer, moins intuitif pour les développeurs de plugins débutants.
+**Cons**: more complex to implement, axis → visual parameter mapping needs calibration, less intuitive for beginner plugin developers.
 
-### Option C — Système de blend shapes (style animation 3D)
+### Option C — Blend Shapes System (3D animation style)
 
-- Paramètres individuels pour chaque élément du visage
-- Les plugins contrôlent directement les blend shapes
+- Individual parameters for each facial element
+- Plugins directly control the blend shapes
 
-**Écarté** : trop granulaire pour l'API plugin, mieux adapté comme couche interne sous les axes continus.
+**Rejected**: too granular for the plugin API, better suited as an internal layer beneath the continuous axes.
 
-## Décision
+## Decision
 
-Moteur émotionnel basé sur **deux axes continus** (valence + énergie) avec **fusion par layers de plugins**.
+Emotion engine based on **two continuous axes** (valence + arousal) with **plugin layer merging**.
 
-Chaque plugin déclare :
-- Une **priorité** (0–100) : détermine quel plugin a le dernier mot en cas de conflit
-- Une **durée d'effet** : combien de temps l'influence persiste
+Each plugin declares:
+- A **priority** (0–100): determines which plugin has the final say in case of conflict
+- An **effect duration**: how long the influence persists
 
-Le firmware maintient une pile d'influences actives, triées par priorité. L'état émotionnel résultant est la combinaison pondérée des influences actives. Quand une influence expire, le système revient fluidement à l'influence de priorité inférieure.
+The firmware maintains a stack of active influences, sorted by priority. The resulting emotional state is the weighted combination of active influences. When an influence expires, the system smoothly falls back to the next lower-priority influence.
 
-Les expressions paramétriques sont générées via `embedded-graphics` : pas de sprites statiques, mais des formes géométriques (arcs, ellipses, bézier) dont les paramètres dépendent des valeurs des axes.
+Parametric expressions are generated via `embedded-graphics`: no static sprites, but geometric shapes (arcs, ellipses, bezier curves) whose parameters depend on the axis values.
 
-## Conséquences
+## Consequences
 
-### Positives
+### Positive
 
-- Expressions naturelles et uniques — pas de « sprite sheet » limitée
-- Transitions fluides entre émotions (interpolation sur les axes)
-- Un plugin CI/CD (priorité 80) peut influencer l'humeur pendant 30s sans écraser définitivement le plugin météo (priorité 20)
-- Extensible : on peut ajouter un troisième axe (confiance, curiosité) sans casser l'existant
-- Les paramètres visuels (ouverture yeux, sourcils) sont calculés, pas dessinés → très léger en mémoire
+- Natural and unique expressions — no limited sprite sheet
+- Smooth transitions between emotions (interpolation on the axes)
+- A CI/CD plugin (priority 80) can influence the mood for 30s without permanently overriding the weather plugin (priority 20)
+- Extensible: a third axis (confidence, curiosity) can be added without breaking existing functionality
+- Visual parameters (eye aperture, eyebrows) are calculated, not drawn — very lightweight in memory
 
-### Négatives
+### Negative
 
-- Le mapping (valence, énergie) → paramètres visuels demande du calibrage et du playtesting
-- L'API sémantique (`/emotion/event { type: "success" }`) doit traduire les événements en valeurs d'axes, ce qui ajoute une couche d'abstraction
-- Debug moins visuel qu'un système à états nommés (il faut visualiser les axes)
+- The (valence, arousal) → visual parameter mapping requires calibration and playtesting
+- The semantic API (`/emotion/event { type: "success" }`) must translate events into axis values, adding an abstraction layer
+- Less visually debuggable than a named-state system (you need to visualize the axes)
