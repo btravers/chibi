@@ -1,4 +1,4 @@
-<![CDATA[# ADR 005 — Charge Qi : bobine dans le dos vs pieds vs pogo pins
+# ADR 005 — Charge Qi : bobine dans le dos vs pieds vs pogo pins
 
 **Date** : 2025-03-19
 
@@ -70,4 +70,3 @@ La **question du mécanisme d'éjection** (comment CHIBI se détache de la dock 
 - **Orientation** : CHIBI doit se retourner (marche arrière) pour se charger, ce qui demande une cinématique de demi-tour fiable
 - **Pertes inductives** : la charge Qi est moins efficace que des contacts directs (~80% vs ~95%)
 - **Aimants** : les aimants N35 pourraient interférer avec la boussole de l'IMU (à vérifier)
-]]>

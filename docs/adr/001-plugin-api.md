@@ -1,4 +1,4 @@
-<![CDATA[# ADR 001 — API Plugin : REST + WebSocket vs MQTT seul
+# ADR 001 — API Plugin : REST + WebSocket vs MQTT seul
 
 **Date** : 2025-03-19
 
@@ -62,4 +62,3 @@ Deux niveaux d'API sont définis :
 - Le serveur HTTP sur ESP32-S3 consomme plus de ressources qu'un client MQTT
 - WebSocket ajoute de la complexité au firmware
 - Les plugins doivent connaître l'adresse IP de CHIBI (résolu par mDNS)
-]]>

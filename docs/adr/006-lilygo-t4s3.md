@@ -1,4 +1,4 @@
-<![CDATA[# ADR 006 — Board : LilyGo T4-S3 vs composants séparés
+# ADR 006 — Board : LilyGo T4-S3 vs composants séparés
 
 **Date** : 2025-03-19
 
@@ -65,4 +65,3 @@ Raisons déterminantes :
 - **Dépendance fournisseur** : si LilyGo arrête la production du T4-S3, il faudra migrer vers une autre solution
 - **Flexibilité réduite** : changer d'écran nécessiterait de changer de board
 - **Form factor** : la taille et la forme du T4-S3 contraignent la conception du boîtier
-]]>

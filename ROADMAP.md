@@ -1,4 +1,4 @@
-<![CDATA[# CHIBI — Roadmap
+# CHIBI — Roadmap
 
 Roadmap en 8 phases progressives, de l'allumage des yeux à l'IA locale embarquée.
 
@@ -164,4 +164,3 @@ Les décisions d'architecture clés sont documentées dans [`docs/adr/`](docs/ad
 | [004](docs/adr/004-battery-legs.md) | Batterie : deux cellules LiPo dans les jambes |
 | [005](docs/adr/005-qi-back.md) | Charge Qi : bobine dans le dos vs pieds vs pogo pins |
 | [006](docs/adr/006-lilygo-t4s3.md) | Board : LilyGo T4-S3 vs composants séparés |
-]]>

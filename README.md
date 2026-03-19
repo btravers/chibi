@@ -1,4 +1,4 @@
-<![CDATA[# CHIBI 🤖
+# CHIBI 🤖
 
 [![Status](https://img.shields.io/badge/status-concept-orange)](ROADMAP.md)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -162,4 +162,3 @@ chibi/
 ## Licence
 
 [MIT](LICENSE)
-]]>

@@ -1,4 +1,4 @@
-<![CDATA[# ADR 003 — Servos : bus UART Dynamixel 2.0 vs PWM individuel
+# ADR 003 — Servos : bus UART Dynamixel 2.0 vs PWM individuel
 
 **Date** : 2025-03-19
 
@@ -65,4 +65,3 @@ La validation initiale de la cinématique (Phase 3a) se fait avec des SG90 bon m
 - **Développement** : le protocole Dynamixel 2.0 doit être implémenté from scratch en Rust (pas de crate existant)
 - **Half-duplex** : la gestion du sens de communication UART ajoute de la complexité au driver
 - **Approvisionnement** : les XL330 sont parfois en rupture de stock chez Robotis
-]]>

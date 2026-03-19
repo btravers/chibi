@@ -1,4 +1,4 @@
-<![CDATA[# ADR 002 — Moteur émotionnel : axes continus vs états discrets
+# ADR 002 — Moteur émotionnel : axes continus vs états discrets
 
 **Date** : 2025-03-19
 
@@ -65,4 +65,3 @@ Les expressions paramétriques sont générées via `embedded-graphics` : pas de
 - Le mapping (valence, énergie) → paramètres visuels demande du calibrage et du playtesting
 - L'API sémantique (`/emotion/event { type: "success" }`) doit traduire les événements en valeurs d'axes, ce qui ajoute une couche d'abstraction
 - Debug moins visuel qu'un système à états nommés (il faut visualiser les axes)
-]]>

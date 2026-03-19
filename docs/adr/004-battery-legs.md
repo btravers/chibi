@@ -1,4 +1,4 @@
-<![CDATA[# ADR 004 — Batterie : deux cellules LiPo dans les jambes
+# ADR 004 — Batterie : deux cellules LiPo dans les jambes
 
 **Date** : 2025-03-19
 
@@ -60,4 +60,3 @@ Les logements dans les jambes sont dimensionnés pour accueillir des cellules au
 - **Câblage** : deux connecteurs à router depuis les jambes vers le BQ25895 dans le torse, à travers les articulations
 - **Appairage** : les deux cellules en parallèle doivent idéalement être du même lot pour un comportement homogène
 - **Conception mécanique** : les logements dans les jambes ajoutent de la complexité à la conception 3D (dimensions exactes à déterminer)
-]]>

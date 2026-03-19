@@ -1,4 +1,4 @@
-<![CDATA[# CHIBI — Bill of Materials (BOM)
+# CHIBI — Bill of Materials (BOM)
 
 Liste complète du matériel nécessaire, organisée par catégorie. Les prix sont indicatifs (mars 2025) et peuvent varier selon les fournisseurs et la disponibilité.
 
@@ -161,4 +161,3 @@ Installation complète : CHIBI mobile + dock station avec Pi 5.
 | Boîtier dock | Impression 3D + visserie | 15 € |
 | Divers dock | Câblage, marge | 156 € |
 | **Total** | | **~841 €** |
-]]>
